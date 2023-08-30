@@ -26,15 +26,14 @@ public class MemberController {
 	
 	@RequestMapping("find")
 	public String find(String keyword, Model model) {
-		System.out.println(keyword); // getParameter 값 바로 가져와짐(Member(id=user1, pwd=user1, name=유저, addr=서울))
+		//System.out.println(keyword); // getParameter 값 바로 가져와짐(Member(id=user1, pwd=user1, name=유저, addr=서울))
 		// --> list값! 데이터 바인딩 -> Model!!
 		// model.addAttribute("list", list);
 	
+		List<Member> list = service.findMember(keyword);
 		
-		List<Member> list = new MemberService().findMember(keyword);
 		
-		
-		if(list!=null) {
+		if(list.size()>0) {
 			model.addAttribute("list", list);
 			return "find_ok";
 		}
@@ -54,10 +53,8 @@ public class MemberController {
 		//System.out.println(member); // (Member(id=user1, pwd=user1, name=유저, addr=서울))
 		// 비즈니스 로직
 		
-		Member vo = new Member(member.getId(), member.getPwd(), member.getPwd(), member.getAddr());
-		new MemberService().registerMember(vo);
-
-
+		service.registerMember(member);
+		
 		// 데이터바인딩 없이 index.jsp로 이동
 		return "redirect:/"; 
 	}
@@ -71,12 +68,15 @@ public class MemberController {
 		return "login";
 	}
 	
-	public String singIn(HttpServletRequest request, Member member) {
-		Member vo = new Member(member.getId(), member.getPwd(), member.getPwd(), member.getAddr());
-		new MemberService().login(vo);
+	@RequestMapping("signIn")
+	public String signIn(HttpSession session, Member member) {
+//		Member m = new Member();
+//		m.setId(member.getId());
+//		m.setPwd(member.getPwd());
+		Member vo = service.login(member);
+		
 		
 		if(vo!=null) {
-			HttpSession session = request.getSession();
 			session.setAttribute("vo", vo);
 		}
 		
@@ -90,8 +90,8 @@ public class MemberController {
 	
 	@RequestMapping("allMember")
 	public String allMember(Model model) {
-		List<Member> list = new MemberService().allMember();
-		
+		List<Member> list = service.allMember();
+	
 		model.addAttribute("list", list);		
 		
 		return "find_ok";
@@ -99,8 +99,7 @@ public class MemberController {
 	
 	// logout - 로그아웃 기능
 	@RequestMapping("logout")
-	public String logout(HttpServletRequest request) {
-		HttpSession session = request.getSession();
+	public String logout(HttpSession session) {
 		if(session.getAttribute("vo")!=null) {
 			session.invalidate();
 			return "redirect:/";
@@ -116,15 +115,15 @@ public class MemberController {
 	}
 
 	@RequestMapping("updateMember")
-	public String updateMember(HttpServletRequest request, Member member) {
-		Member vo = new Member(member.getId(), member.getPwd(), member.getName(), member.getAddr());
+	public String updateMember(HttpSession session, Member member) {
+	
+		service.updateMember(member);
 		
-		new MemberService().updateMember(vo);
+		if(session.getAttribute("vo")!=null) {
+			session.setAttribute("vo", member);	
+		}
 		
-		HttpSession session = request.getSession();
-		session.setAttribute("vo", vo);
-		
-		return "update_result";
+		return "redirect:/";
 		
 		
 	}

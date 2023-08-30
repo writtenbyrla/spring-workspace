@@ -3,17 +3,22 @@
 <mapper namespace="memberMapper">
 
 	<!-- resultMap -->
-
+	<resultMap type="Member" id="memberMap">
+		<id property="id" column="id"/>
+		<result property="pwd" column="password"/>
+		<result property="name" column="name" />
+		<result property="addr" column="address" />
+	</resultMap>
 
 	<insert id="registerMember" parameterType="Member">
 		INSERT INTO MEMBER(ID, PASSWORD, NAME, ADDRESS) VALUES(#{id}, #{pwd}, #{name}, #{addr})
 	</insert>
 	
-	<select id="showAllMember" resultType="Member">
+	<select id="showAllMember" resultMap="memberMap">
 		SELECT ID, NAME, ADDRESS FROM MEMBER
 	</select> 
 	
-	<select id="findMember" parameterType="String" resultType="Member">
+	<select id="findMember" parameterType="String" resultMap="memberMap">
 		SELECT ID, NAME, ADDRESS FROM MEMBER
 		<where>
 			<if test="keyword!=null">
@@ -24,24 +29,14 @@
 		</where>
 	</select>
 
-	<select id="login" parameterType="Member" resultType="Member">
-		SELECT * FROM MEMBER WHERE ID=#{id} AND PASSWORD=#{pwd}
+	<select id="login" parameterType="Member" resultMap="memberMap">
+		SELECT ID, NAME, ADDRESS FROM MEMBER WHERE ID=#{id} AND PASSWORD=#{pwd}
 	</select>
 	
 
 	<update id="updateMember" parameterType="Member">
 		UPDATE MEMBER  
-		<trim prefix="SET" suffixOverrides=",">
-			<if test="password!=null">
-				PASSWORD = #{pwd}
-			</if>
-			<if test="name!=null">
-				NAME = #{name}
-			</if>
-			<if test="password!=null">
-				ADDRESS = #{addr}
-			</if>
-		</trim>
+		SET password=#{pwd}, name=#{name}, address=#{addr}
 		WHERE id = #{id}
 	</update> 
 	
