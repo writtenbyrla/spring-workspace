@@ -3,43 +3,47 @@
 <mapper namespace="board">
 
 	<!-- 쿼리문 작성, parameterType, resultType -->
+	<!-- insert시 자동생성키 : useGeneratedKeys="true" keyProperty="no" keyColumn="no"  -->
 	<insert id="insert" parameterType="Board" useGeneratedKeys="true" keyProperty="no" keyColumn="no">
 		INSERT INTO BOARD(no, title, content, writer) 
 		VALUES(SEQ_BOARD.NEXTVAL, #{title}, #{content}, #{writer})
 	</insert>
 
+	<!-- 최신순(DESC)으로 10개씩 보기(힌트 /**/, 인덱스 INDEX 이용) -->
+	<!-- CDATE: 쿼리문 그대로 사용하기 위함 -->
 	<select id="selectAll" resultType="Board">
-		SELECT NO, TITLE, CONTENT, WRITER, REGDATE
-		FROM BOARD
+		
+		<![CDATA[
+		SELECT NUM, NO, TITLE, WRITER, REGDATE
+			FROM (
+			    SELECT /*+ INDEX_DESC(board PK_BOARD) */
+			    ROWNUM NUM, NO, TITLE, WRITER, REGDATE
+			    FROM board
+			    WHERE ROWNUM <= #{page} * #{amount})
+		WHERE NUM > (#{page} - 1) * #{amount}
+		]]>
+		
 	</select>
 	
-	<!-- 
-	<select id="select" parameterType="String" resultType="Board">
-		SELECT NO, TITLE, CONTENT, WRITER, REGDATE
-		FROM BOARD
-		<where>
-			<if test="keyword != null">
-				no = #{no} 
-				OR title = '%' || #{keyword} || '%'
-				OR content =  '%' || #{keyword} || '%'
-				OR writer =  '%' || #{keyword} || '%'
-				OR regdate = '%' || #{keyword} || '%'
-			</if>
-		</where>
+	<!-- 총 게시물 개수 -->
+	<select id="getTotal" resultType="int">
+		SELECT count(*) FROM board		
 	</select>
 	
+
+	<select id="select" parameterType="int" resultType="Board">
+		SELECT no, title, content, writer FROM board WHERE no = #{no} 
+	</select>
+	
+
 	<update id="update" parameterType="Board">
-		UPDATE BOARD
-		SET TITLE = #{title}, CONTENT = #{content}, WRITER = #{writer}
-		WHERE id = #{id}
+		UPDATE board
+		SET title = #{title}, content = #{content}
+		WHERE no = #{no}
 	</update>
 	
-	<delete id="delete" parameterType="Board">
-		DELETE 
-		FROM BOARD
-		<where>
-			no = #{no} 
-		</where>
+	<delete id="delete" parameterType="int">
+		DELETE FROM board WHERE no = #{no} 
 	</delete>
-	 -->
+
 </mapper>

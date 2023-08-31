@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.kh.mvc.model.vo.Board;
+import com.kh.mvc.model.vo.Criteria;
 
 @Repository
 public class BoardDAO {
@@ -18,20 +19,24 @@ public class BoardDAO {
 		return sqlSession.insert("board.insert", board);
 	}
 	
-	public List<Board> selectAllBoard() {
-		return sqlSession.selectList("board.selectAll");
+	public List<Board> selectAllBoard(Criteria cri) {
+		return sqlSession.selectList("board.selectAll", cri);
 	}
 	
-//	public List<Board> select(String keyword){
-//		return sqlSession.selectList("Board.select", keyword);
-//	}
-//	
-//	public int update(Board board) {
-//		return sqlSession.update("Board.update", board);
-//	}
-//	
-//	public int delete(Board board) {
-//		return sqlSession.delete("Board.delete", board);
-//	}
+	public int getTotal() {
+		return sqlSession.selectOne("board.getTotal");
+	}
+	
+	public Board selectBoard(int no){
+		return sqlSession.selectOne("board.select", no);
+	}
+	
+	public int updateBoard(Board board) {
+		return sqlSession.update("board.update", board);
+	}
+	
+	public int deleteBoard(int no) {
+		return sqlSession.delete("board.delete", no);
+	}
 	
 }
