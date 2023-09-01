@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 pageEncoding="UTF-8"%>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%> <!-- 사진클릭시 파일 다운로드 -->
+
 <!DOCTYPE html>
 <html data-bs-theme="dark">
   <head>
@@ -23,11 +23,13 @@ pageEncoding="UTF-8"%>
   </head>
   <body>
     <div class="container">
-      <h1>게시글 정보</h1>
-      <form>
+      <h1>게시글 수정</h1>
+      <form action="/board/update" method="post" enctype="multipart/form-data"> <!-- 이미지 첨부한거 같이 보낼때 enctype 사용 -->
+      	<input type="hidden" name="no" value="${vo.no}">
+      	<input type="hidden" name="url" value="${vo.url}">
         <div class="form-group">
           <label for="title">Title</label>
-          <input type="text" name="title" id="title" readonly value ="${vo.title}" class="form-control" />
+          <input type="text" name="title" id="title" value ="${vo.title}" class="form-control" />
         </div>
         <div class="form-group">
           <label for="content">Content</label>
@@ -37,19 +39,19 @@ pageEncoding="UTF-8"%>
             class="form-control"
             cols="30"
             rows="10"
-            style="resize: none" 
-            readonly
+            style="resize: none"
           >${vo.content}</textarea>
-         <!-- <a href="/board/download?filename=${fn:replace(vo.url, '/upload/', '')}"><img src="${vo.url}"/></a> --> <!-- 사진 클릭하면 다운로드 되도록 -->
-       		<a href="${vo.url}" download><img src="${vo.url}"/></a> <!-- html에서 제공하는 다운로드 기능, 안될 때도 있음 -->
+        </div>
+        <div class="form-group">
+        	<label for="uploadFile">파일 첨부하기</label>
+        	<input class="form-control" type="file" id="uploadFile" name="uploadFile" accept="image/*"/>
         </div>
         <div class="form-group">
           <label for="writer">Writer</label>
           <input type="text" readonly value=${vo.writer} id="writer" name="writer" class="form-control" />
         </div>
-        <a class="btn btn-outline-warning" href="/board/update?no=${vo.no}">수정</a>
+        <button type="submit" class="btn btn-outline-warning">수정</button>
       	<a class="btn btn-outline-danger" href="/board/delete?no=${vo.no}">삭제</a>
-      	<a class="btn btn-outline-warning" href="/board/list">목록으로 돌아가기</a>
       </form>
     </div>
   </body>

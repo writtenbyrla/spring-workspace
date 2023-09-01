@@ -61,7 +61,6 @@
 
       <nav aria-label="Page navigation">
         <ul class="pagination">
-        	
         	<!-- prev 버튼 -->
         	<!-- 이전페이지 true인 경우(시작페이지가 1이 아닌 경우) -->
         	<!-- startPage가 11인 경우 이전페이지 버튼 누르면 10페이지로 이동 -->
@@ -74,6 +73,7 @@
         	<!-- 버튼 시작페이지~엔드페이지 10개씩 보여주기(반복문) -->
         	<c:forEach begin="${paging.startPage}" end="${paging.endPage}" var="num">
         		<li class="page-item">
+        			<!-- 현재 페이지 버튼 활성화 -->
            			 <a class="page-link ${paging.cri.page == num? 'active' : '' }" href="/board/list?page=${num}">${num}</a>
           		</li>
         	</c:forEach>
