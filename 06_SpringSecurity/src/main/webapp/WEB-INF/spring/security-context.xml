@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-5.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+	
+	<!-- handler 쓰기 위한 bean 등록 -->
+	<bean id="loginSuccess" class="com.kh.security.LoginSuccessHandler"/>
+	<bean id="customAccessDenied" class="com.kh.security.CustomAccessDeniedHandler"/>
+	
+	<!-- 패스워드 암호화를 위한 bean 등록 -->
+	<bean id="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+	
+	<context:component-scan base-package="com.kh.security"/>
+	<bean id="memberService" class="com.kh.security.model.service.MemberService" />
+	
+	<!-- 경로에 관해 작성 -->
+	<security:http>
+		<security:intercept-url pattern="/all" access="permitAll" /> <!-- permitAll: 전체 -->
+		<!--
+		 	로그인한 회원, 관리자 접근 가능 
+		 	ROLE_은 테이블 생성시 
+		 	access가 여럿일 경우는 hasAnyRole
+		 -->
+		<security:intercept-url pattern="/member" access="hasAnyRole('ROLE_MEMBER', 'ROLE_ADMIN')"/> 
+		<security:intercept-url pattern="/admin" access="hasRole('ROLE_ADMIN')"/> <!-- 관리자만 접근 -->
+		
+		<!-- 로그인에 대한 security-->
+		<!-- 로그인 성공시 이동할 경로(상단 bean 등록한 loginSuccess(핸들러)-->
+		<security:form-login login-page="/login" authentication-success-handler-ref="loginSuccess"/> 
+		
+		<security:csrf disabled="true"/>
+		<security:logout logout-url="/logout" invalidate-session="true"/>
+		
+		<!-- 에러발생 시 error 페이지로 바로 이동 -->
+		<!-- <security:access-denied-handler error-page="/error"/> -->
+		
+		<!-- 에러 발생시 handler로 처리 -->
+		<security:access-denied-handler ref="customAccessDenied"/>
+	</security:http>
+	
+	<!-- 인증 매니저 -->
+	<security:authentication-manager>
+		<!-- 매니저한테 제공할 권한 -->
+		<security:authentication-provider user-service-ref="memberService">
+			<security:password-encoder hash="bcrypt"/> <!-- 패스워드 암호화 처리 -->
+			<!-- <security:user-service>
+				<security:user name="member" password="{noop}member" authorities="ROLE_MEMBER" />
+				<security:user name="admin" password="{noop}admin" authorities="ROLE_ADMIN"/>
+			</security:user-service> -->
+
+		</security:authentication-provider>
+	</security:authentication-manager>
+</beans>

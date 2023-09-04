@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="board">
+
+	<!-- 쿼리문 작성, parameterType, resultType -->
+	<!-- insert시 자동생성키 : useGeneratedKeys="true" keyProperty="no" keyColumn="no"  -->
+	<insert id="insert" parameterType="Board" useGeneratedKeys="true" keyProperty="no" keyColumn="no">
+		INSERT INTO BOARD(no, title, content, writer, url) 
+		VALUES(SEQ_BOARD.NEXTVAL, #{title}, #{content}, #{writer}, #{url})
+	</insert>
+
+	<!-- 최신순(DESC)으로 10개씩 보기(힌트 /**/, 인덱스 INDEX 이용) -->
+	<!-- CDATE: 쿼리문 그대로 사용하기 위함 -->
+	<select id="selectAll" resultType="Board">
+		
+		<![CDATA[
+		SELECT NUM, NO, TITLE, WRITER, REGDATE
+			FROM (
+			    SELECT /*+ INDEX_DESC(board PK_BOARD) */
+			    ROWNUM NUM, NO, TITLE, WRITER, REGDATE
+			    FROM board
+			    WHERE ROWNUM <= #{page} * #{amount})
+		WHERE NUM > (#{page} - 1) * #{amount}
+		]]>
+		
+	</select>
+	
+	<!-- 총 게시물 개수 -->
+	<select id="getTotal" resultType="int">
+		SELECT count(*) FROM board		
+	</select>
+	
+
+	<select id="select" parameterType="int" resultType="Board">
+		SELECT * FROM board WHERE no = #{no} 
+	</select>
+	
+
+	<update id="update" parameterType="Board">
+		UPDATE board
+		SET title = #{title}, content = #{content}, url = #{url}
+		WHERE no = #{no}
+	</update>
+	
+	<delete id="delete" parameterType="int">
+		DELETE FROM board WHERE no = #{no} 
+	</delete>
+
+</mapper>
