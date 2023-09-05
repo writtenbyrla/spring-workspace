@@ -24,7 +24,7 @@ import com.kh.mvc.model.vo.Paging;
 @RequestMapping("/board/*") // board 폴더 아래 경로로 이동
 public class BoardController {
 	
-	String path = "D:\\spring-workspace\\05_MVC_Board\\src\\main\\webapp\\upload\\";
+	String path = "D:\\spring-workspace\\05_MVC_Board_Security3\\src\\main\\webapp\\upload\\";
 
 	
 	@Autowired

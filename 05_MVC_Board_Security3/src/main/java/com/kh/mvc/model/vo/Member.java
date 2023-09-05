@@ -10,7 +10,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import lombok.Data;
 
 @Data
-public class Member implements UserDetails{ // springSecurity때문에 UserDetails를 상속받아야 함
+//springSecurity때문에 UserDetails를 상속받아야 함
+public class Member implements UserDetails{ 
 	private String id;
 	private String password;
 	private String name;
@@ -24,6 +25,11 @@ public class Member implements UserDetails{ // springSecurity때문에 UserDetai
 		ArrayList<GrantedAuthority> authList = new ArrayList();
 		authList.add(new SimpleGrantedAuthority(auth));
 		return authList;
+	}
+	
+	@Override
+	public String getPassword() {
+		return password;
 	}
 	
 	@Override

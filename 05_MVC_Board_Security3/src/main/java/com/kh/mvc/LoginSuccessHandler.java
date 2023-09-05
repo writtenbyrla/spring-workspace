@@ -16,7 +16,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 			Authentication authentication) throws IOException, ServletException {
 	
 		
-		response.sendRedirect("board/list");
+		response.sendRedirect("/board/list");
 	}
 
 }

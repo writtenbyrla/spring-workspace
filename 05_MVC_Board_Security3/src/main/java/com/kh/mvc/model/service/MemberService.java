@@ -18,7 +18,7 @@ public class MemberService implements UserDetailsService{
 	public int registerMember(Member vo) {
 		return dao.registerMember(vo);
 	}
-
+	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		Member member = dao.getMemberById(username); // Member에서 username을 id로 일치시킴

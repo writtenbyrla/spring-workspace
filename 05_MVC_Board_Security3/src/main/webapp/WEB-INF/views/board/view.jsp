@@ -50,13 +50,29 @@ pageEncoding="UTF-8"%>
           <input type="text" readonly value="${vo.writer}" id="writer" name="writer" class="form-control" />
         </div>
         
-        <!-- 로그인한 정보 가지고 오기 -->
-        <sec:authentication property="principal" var="info"/>
-        <!-- 작성자 정보가 일치하는 경우에만 수정 삭제 버튼 보이게 하기 -->
-        <c:if test="${vo.writer eq info.username}">
-    	   	<a class="btn btn-outline-warning" href="/board/update?no=${vo.no}">수정</a>
-      		<a class="btn btn-outline-danger" href="/board/delete?no=${vo.no}">삭제</a>
-        </c:if>
+        
+		<!--
+			principal: 계정 정보를 가지고 있음
+						만약에 로그인된 정보가 없으면 anonymousUser(문자열)가 들어감
+						
+			* authorize: 권한부여와 관련된 것
+			  authentication: 인증과 관련된 것, 계정 정보		
+								
+	    	<sec:authentication property="principal" var="info"/>  로그인한 정보 가지고 오기 
+	 
+	        <c:if test="${vo.writer eq info.username}">   작성자 정보가 일치하는 경우에만 수정 삭제 버튼 보이게 하기
+	    	   	<a class="btn btn-outline-warning" href="/board/update?no=${vo.no}">수정</a>
+	      		<a class="btn btn-outline-danger" href="/board/delete?no=${vo.no}">삭제</a>
+	        </c:if>  
+	    -->
+	        
+	    <!--  anonymouseUser로 조건이 안걸리기 때문에 더 확실한 조건으로 걸어줌 -->    
+	    <sec:authorize access="hasRole('ROLE_MEMBER')">   
+	    	
+	   		<a class="btn btn-outline-warning" href="/board/update?no=${vo.no}">수정</a>
+	    	<a class="btn btn-outline-danger" href="/board/delete?no=${vo.no}">삭제</a>
+        </sec:authorize>
+        
       	<a class="btn btn-outline-warning" href="/board/list">목록으로 돌아가기</a>
       </form>
     </div>

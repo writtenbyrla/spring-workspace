@@ -19,13 +19,18 @@
 
 	<!-- 경로 -->
 	<security:http>
-		<!--  <security:intercept-url pattern="board/list" access="hasAnyRole('ROLE_MEMBER')"/>-->
+		<security:intercept-url pattern="/board/list" access="permitAll" />
+		
+		<!-- 등록, 수정 회원만 가능하도록  -->
+		<security:intercept-url pattern="/board/insert" access="hasRole('ROLE_MEMBER')"/>
+		<security:intercept-url pattern="/board/update" access="hasRole('ROLE_MEMBER')"/>
+	
 		<!-- 로그인 성공시 이동할 경로 -->
-		<security:form-login login-page="/login" authentication-success-handler-ref="loginSuccess"/> 
+		<security:csrf disabled="true"/>
+		<security:form-login login-page="/member/login" authentication-success-handler-ref="loginSuccess"/> 
 	
 		<!-- 로그아웃 -->
-		<security:csrf disabled="true"/>
-		<security:logout logout-url="/logout" invalidate-session="true"/>
+
 		
 	</security:http>
 
@@ -37,5 +42,4 @@
 			
 		</security:authentication-provider>
 	</security:authentication-manager>
-
 </beans>

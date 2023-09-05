@@ -48,7 +48,7 @@ pageEncoding="UTF-8"%>
         </div>
         <div class="form-group">
           <label for="writer">Writer</label>
-          <input type="text" readonly value=${vo.writer} id="writer" name="writer" class="form-control" />
+          <input type="text" readonly value="${vo.writer}" id="writer" name="writer" class="form-control" />
         </div>
         <button type="submit" class="btn btn-outline-warning">수정</button>
       	<a class="btn btn-outline-danger" href="/board/delete?no=${vo.no}">삭제</a>
@@ -56,3 +56,4 @@ pageEncoding="UTF-8"%>
     </div>
   </body>
 </html>
+

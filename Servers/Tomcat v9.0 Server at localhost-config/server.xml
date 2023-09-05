@@ -163,9 +163,8 @@
       
       
       <!-- 사진 첨부한거 경로 접근하기 위해서 추가 -->
-      
-      
-      <Context docBase="05_MVC_Board_Security2" path="/" reloadable="true" source="org.eclipse.jst.jee.server:05_MVC_Board_Security2"/></Host>
+      <Context docBase="D:\\spring-workspace\\05_MVC_Board_Security3\\src\\main\\webapp\\upload\\" path="/upload" reloadalbe="true"/>
+      <Context docBase="07_RestfulAPI" path="/api" reloadable="true" source="org.eclipse.jst.jee.server:07_RestfulAPI"/></Host>
     </Engine>
   </Service>
 </Server>

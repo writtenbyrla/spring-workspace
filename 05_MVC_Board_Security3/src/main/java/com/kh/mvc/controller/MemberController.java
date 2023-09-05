@@ -5,11 +5,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.kh.mvc.model.service.MemberService;
 import com.kh.mvc.model.vo.Member;
 
+
+
 @Controller
+@RequestMapping("/member/*")
 public class MemberController {
 	
 	@Autowired
@@ -21,11 +25,7 @@ public class MemberController {
 
 	
 	@GetMapping("/login")
-	public void login() {
-	}
-	
-	@GetMapping("/logout")
-	public void logout() {}
+	public void login() {}
 	
 	
 	@GetMapping("/register")
@@ -43,6 +43,6 @@ public class MemberController {
 		vo.setPassword(encodePasswordString);
 		
 		service.registerMember(vo);
-		return "redirect:/login";
+		return "redirect:/member/login";
 	}
 }	
