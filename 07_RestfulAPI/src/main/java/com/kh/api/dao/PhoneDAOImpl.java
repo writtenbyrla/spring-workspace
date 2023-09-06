@@ -27,25 +27,22 @@ public class PhoneDAOImpl implements PhoneDAO {
 
 	@Override
 	public List<Phone> select() {
-		return session.selectList("phone.select");
+		return session.selectList("phone.select", null);
 	}
 
-	@Override
-	public UserInfo select(UserInfo user) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public int update(Phone phone) {
-		// TODO Auto-generated method stub
-		return 0;
+		return session.update("phone.update", phone);
 	}
 
 	@Override
 	public int delete(String num) {
-		// TODO Auto-generated method stub
-		return 0;
+		return session.delete("phone.delete", num);
 	}
 
+	@Override
+	public UserInfo select(UserInfo user) {
+		return session.selectOne("phone.selectUser", user);
+	}
 }

@@ -7,6 +7,7 @@
 	</insert>
 	
 	<!-- Dynamic Query : selectAll + selectOne(num) 둘 다 사용 -->
+	<!--
 	<select id="select" parameterType="String" resultType="Phone">
 		SELECT * FROM PHONE
 		<where>
@@ -15,17 +16,46 @@
 			</if>
 		</where>
 	</select>
-
-	<!-- Dynamic Query-->
+	  -->
+	<resultMap type="phone" id="phoneWithCompany">
+		<id column="num" property="num" />
+		<result column="model" property="model"/>
+		<result column="price" property="price"/>
+		<result column="vcode" property="vcode"/>		
+		<association property="company" javaType="company">
+			<id column="vcode" property="vcode"/>
+			<result column="vendor" property="vendor"/>
+		</association>
+	</resultMap>
+	
+	<select id="select" parameterType="String" resultMap="phoneWithCompany">
+		SELECT p.num, p.model, p.price, p.vcode, c.vcode, c.vendor 
+		FROM phone p
+		JOIN company c ON(p.vcode=c.vcode)
+		<if test="num!=null">
+			WHERE num = #{num}
+		</if>
+	</select>
+	
+	
 	<delete id="delete" parameterType="String" >
 		DELETE FROM PHONE
 		WHERE num = #{num}
 	</delete>
 	
 	<update id="update" parameterType="Phone">
-	
+		UPDATE phone
+		SET model=#{model}, price=#{price}, vcode=#{vcode}
+		WHERE num = #{num}
 	</update>
 	
 	<!-- Dynamic Query : id, pw 둘 다 입력했을때랑 id만 입력했을 때-->
-	<select id="selectUser"></select>
+	<select id="selectUser" parameterType="userInfo" resultType="userInfo">
+		SELECT id, pw
+		FROM userinfo
+		WHERE id=#{id}
+		<if test="pw!=null">
+			AND pw=#{pw}
+		</if>
+	</select>
 </mapper>

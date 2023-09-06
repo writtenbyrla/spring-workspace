@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.kh.api.dao.PhoneDAOImpl;
+import com.kh.api.dao.PhoneDAO;
 import com.kh.api.model.Phone;
 import com.kh.api.model.UserInfo;
 
@@ -13,7 +13,8 @@ import com.kh.api.model.UserInfo;
 public class PhoneServiceImpl implements PhoneService{
 
 	@Autowired 
-	public PhoneDAOImpl dao;
+//	public PhoneDAOImpl dao;
+	public PhoneDAO dao;
 	
 	@Override
 	public int insert(Phone phone) {
@@ -32,20 +33,17 @@ public class PhoneServiceImpl implements PhoneService{
 
 	@Override
 	public UserInfo select(UserInfo user) {
-		// TODO Auto-generated method stub
-		return null;
+		return dao.select(user);
 	}
 
 	@Override
 	public int update(Phone phone) {
-		// TODO Auto-generated method stub
-		return 0;
+		return dao.update(phone);
 	}
 
 	@Override
 	public int delete(String num) {
-		// TODO Auto-generated method stub
-		return 0;
+		return dao.delete(num);
 	}
 
 }
